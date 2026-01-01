@@ -1,36 +1,34 @@
-import asyncio
-from mcp.server import Server
-from mcp.types import Tool, TextContext
+from mcp.server.fastmcp import FastMCP
+from mcp.types import TextContent
 
-server = Server("python-mcp-demp")
+# Create the FastMCP instance
+mcp = FastMCP("python-mcp-demo")
 
-@server.tool()
+@mcp.tool()
 async def add_numbers(a: float, b: float) -> TextContent:
     """
-    Add two numbers and return the result
+    Add two numbers and return the result.
     """
     result = a + b
-    return TextContent(text=f"Result: {result}")
+    return TextContent(type="text", text=f"Result: {result}")
 
-@server.tool()
+@mcp.tool()
 async def echo_message(message: str) -> TextContent:
     """
     Echo a message and return metadata about it.
     """
     length = len(message)
     upper = message.upper()
-    text =  (
+    text = (
         f"Echoed: {message}\n"
         f"Length: {length}\n"
         f"UpperCase: {upper}\n"
     )
-    return TextContent(text=text)
+    return TextContent(type="text", text=text)
 
-async def main() -> None:
-    """
-    Run the MCP server over stdin/stdout.
-    """
-    await server.run_stdio()
+if __name__ == "__main__":
+    # For Claude Desktop / ChatGPT MCP hosts (stdio transport):
+    mcp.run(transport="stdio")
 
-if __name__ == "-__main__":
-    asyncio.run(main())
+    # For local HTTP testing instead, you could use:
+    # mcp.run(transport="streamable-http")
