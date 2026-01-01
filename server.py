@@ -1,34 +1,46 @@
+import asyncio
+import requests
 from mcp.server.fastmcp import FastMCP
 from mcp.types import TextContent
 
-# Create the FastMCP instance
 mcp = FastMCP("python-mcp-demo")
+
+GO_BASE_URL = "http://localhost:8080"
 
 @mcp.tool()
 async def add_numbers(a: float, b: float) -> TextContent:
     """
     Add two numbers and return the result.
     """
-    result = a + b
-    return TextContent(type="text", text=f"Result: {result}")
+    resp = requests.post(
+        f"{GO_BASE_URL}/sum",
+        json={"a": a, "b": b},
+        timeout=5
+    )
+    resp.raise_for_status()
+    data = resp.json() #expects {"result": <number>}
+    return TextContent(text=f"Result from Go: {data['result']}")
 
 @mcp.tool()
 async def echo_message(message: str) -> TextContent:
     """
     Echo a message and return metadata about it.
     """
-    length = len(message)
-    upper = message.upper()
-    text = (
-        f"Echoed: {message}\n"
-        f"Length: {length}\n"
-        f"UpperCase: {upper}\n"
+    resp = requests.post (
+        f"{GO_BASE_URL}/echo",
+        json={"message": message},
+        timeout=5,
     )
-    return TextContent(type="text", text=text)
+    resp.raise_for_status()
+    data = resp.json() #expects {echoed, length, uppercase}
+
+    text = (
+        f"Echoed: {data['echoed']}\n"
+        f"Length: {data['length']}\n"
+        f"Uppercase: {data['uppercase']}"
+    )
+    return TextContent(text=text)
 
 if __name__ == "__main__":
-    # For Claude Desktop / ChatGPT MCP hosts (stdio transport):
+    # stdio transport so an MCP host can spawn this process
     mcp.run(transport="stdio")
-
-    # For local HTTP testing instead, you could use:
-    # mcp.run(transport="streamable-http")
