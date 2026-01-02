@@ -15,3 +15,9 @@
     }
   }
 }
+
+#activate python
+source .venv/bin/activate
+
+#to run App
+python3 server.py
