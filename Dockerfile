@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.14.2-slim
 
 # Prevents Python from writing .pyc files and buffers
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # If your app is "python app.py"
-CMD ["python", "app.py"]
+CMD ["python", "server.py"]
