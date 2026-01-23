@@ -19,5 +19,8 @@
 #activate python
 source .venv/bin/activate
 
+#to kill and exit the python virtual environment
+deactivate
+
 #to run App
 python3 server.py
