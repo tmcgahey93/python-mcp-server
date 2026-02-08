@@ -5,7 +5,7 @@ from mcp.types import TextContent
 
 mcp = FastMCP("python-mcp-demo")
 
-GO_BASE_URL = "http://localhost:8080"
+GO_APP_BASE_URL = "http://localhost:8080"
 
 @mcp.tool()
 async def add_numbers(a: float, b: float) -> TextContent:
@@ -13,7 +13,7 @@ async def add_numbers(a: float, b: float) -> TextContent:
     Add two numbers and return the result.
     """
     resp = requests.post(
-        f"{GO_BASE_URL}/sum",
+        f"{GO_APP_BASE_URL}/sum",
         json={"a": a, "b": b},
         timeout=5
     )
@@ -27,7 +27,7 @@ async def echo_message(message: str) -> TextContent:
     Echo a message and return metadata about it.
     """
     resp = requests.post (
-        f"{GO_BASE_URL}/echo",
+        f"{GO_APP_BASE_URL}/echo",
         json={"message": message},
         timeout=5,
     )
